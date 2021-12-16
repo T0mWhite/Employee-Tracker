@@ -1,16 +1,57 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 
+const { showDepartments } = require("./helpers/funcs");
+
 startProgram();
 async function startProgram() {
-  const data = await inquirer.prompt([
+  const { menuChoices } = await inquirer.prompt([
     {
-      name: "student",
+      name: "mainChoices",
       type: "list",
-      message: "what do you want to do?",
-      choices: ["show departments", "show employees"],
+      message: "What would you like to do?",
+      choices: [
+        "Show department list",
+        "Show role list",
+        "Show employees",
+        "Add department",
+        "Add role",
+        "Add employee",
+        "Update employee",
+        "Update employee role",
+      ],
     },
   ]);
+  console.log(menuChoices);
+
+  switch (menuChoices) {
+    case "Show department list":
+      showDepartments();
+      break;
+    case "show role list":
+      showRoles();
+      break;
+    case "show employees":
+      showEmployees();
+      break;
+    case "add department":
+      addDepartment();
+      break;
+    case "add role":
+      addRole();
+      break;
+    case "add employee":
+      addEmployee();
+      break;
+    case "update employee":
+      updateEmployee();
+      break;
+    case "update employee role":
+      updateRole();
+      break;
+    case "exit":
+      process.exit();
+  }
 
   // create the connection
   const connection = await mysql.createConnection({

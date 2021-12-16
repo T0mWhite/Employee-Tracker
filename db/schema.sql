@@ -3,35 +3,35 @@ create database super_company_db;
 use super_company_db;
 
 create table department (
-id int primary key auto_increment,
-name varchar(30) not null
--- on delete set null
+department_id INT AUTO_INCREMENT,
+name VARCHAR(30) NOT NULL,
+
+PRIMARY KEY (department_id)
 );
 
 
-create table role (
-id int primary key auto_increment not null,
-title varchar(30) not null,
-salary decimal not null,
-department_id int,
-foreign key (department_id)
-references department(id)
-on delete cascade
+CREATE TABLE roles (
+role_id INT AUTO_INCREMENT NOT NULL,
+title VARCHAR(30) NOT NULL,
+salary DECIMAL NOT NULL,
+
+PRIMARY KEY (role_id),
+
+department_id INT,
+FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE CASCADE
 );
 
 
-create table employee (
-id int primary key auto_increment,
-first_name varchar(30) not null,
-last_name varchar(30) not null,
+CREATE TABLE employees (
+employee_id INT AUTO_INCREMENT,
+first_name VARCHAR(30) NOT NULL,
+last_name VARCHAR(30) NOT NULL,
 
-role_id int,
-foreign key (role_id)
-references role(id)
-on delete cascade
+PRIMARY KEY (employee_id),
 
--- manager_id int,
--- foreign key (manager_id)
--- references employee(id)
--- on delete set null
+role_id INT,
+FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE,
+
+manager_id INT,
+FOREIGN KEY (manager_id) REFERENCES employees(employee_id) ON DELETE CASCADE
 );
