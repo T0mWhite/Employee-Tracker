@@ -1,10 +1,27 @@
-let showDepartments = () => {
-  db.query("select * from departments", (err, result) => {
-    if (err) {
-      console.log(err);
-    }
-    console.table(result);
-  });
+const mysql = require("mysql2/promise");
+const cTable = require("console.table");
+// const { startProgram } = require("../index");
+
+const funcMeUp = require("../index");
+const startProgram = funcMeUp.startProgram;
+
+
+const dbConnection = {
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "super_company_db",
+};
+
+const db = mysql.createConnection(
+  dbConnection,
+  console.log(`Connected to the Super Company database.`)
+);
+
+let showDepartments = async () => {
+  const [rows, fields] = await (await db).execute("SELECT * FROM department");
+  console.table(rows);
+  startProgram();
 };
 
 let showRoles = () => {
@@ -70,8 +87,4 @@ let addRole = () => {
   );
 };
 
-
-
-
-
-module.exports = { showDepartments };
+module.exports = {showDepartments};

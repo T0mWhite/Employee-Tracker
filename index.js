@@ -1,11 +1,38 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
+const cTable = require("console.table");
 
 const { showDepartments } = require("./helpers/funcs");
 
+const dbConnection = {
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "super_company_db",
+};
+
+// db();
+// async function db() {
+//   const data = await inquirer.prompt
+// }
+
+const db = mysql.createConnection(
+  dbConnection,
+  console.log(`Connected to the Super Company database.`)
+);
+
+// // create the connection
+// let dbConnect = async (dbConnection) => {
+// const connection = await mysql.createConnection(dbConnection);
+// // query database
+// const [rows, fields] = await connection.execute("select * from students;");
+
+// console.table(rows);
+// }
+
 startProgram();
 async function startProgram() {
-  const { menuChoices } = await inquirer.prompt([
+  const { mainChoices } = await inquirer.prompt([
     {
       name: "mainChoices",
       type: "list",
@@ -19,48 +46,47 @@ async function startProgram() {
         "Add employee",
         "Update employee",
         "Update employee role",
+        "Exit"
       ],
     },
   ]);
-  console.log(menuChoices);
 
-  switch (menuChoices) {
+  console.log(mainChoices);
+
+  switch (mainChoices) {
     case "Show department list":
       showDepartments();
       break;
-    case "show role list":
+    case "Show role list":
       showRoles();
       break;
-    case "show employees":
+    case "Show employees":
       showEmployees();
       break;
-    case "add department":
+    case "Add department":
       addDepartment();
       break;
-    case "add role":
+    case "Add role":
       addRole();
       break;
-    case "add employee":
+    case "Add employee":
       addEmployee();
       break;
-    case "update employee":
+    case "Update employee":
       updateEmployee();
       break;
-    case "update employee role":
+    case "Update employee role":
       updateRole();
       break;
-    case "exit":
+    case "Exit":
       process.exit();
   }
-
-  // create the connection
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "classlist_db",
-  });
-  // query database
-  const [rows, fields] = await connection.execute("select * from students;");
-
-  console.table(rows);
 }
+
+// Wrap up the exports in an object
+const funcMeUp = {
+startProgram
+};
+
+// Export it
+module.exports = funcMeUp;
