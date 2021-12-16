@@ -4,7 +4,7 @@ use super_company_db;
 
 create table department (
 department_id INT AUTO_INCREMENT,
-name VARCHAR(30) NOT NULL,
+dept_name VARCHAR(30) NOT NULL,
 
 PRIMARY KEY (department_id)
 );

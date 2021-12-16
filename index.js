@@ -2,19 +2,12 @@ const inquirer = require("inquirer");
 const mysql = require("mysql2/promise");
 const cTable = require("console.table");
 
-const { showDepartments } = require("./helpers/funcs");
-
 const dbConnection = {
   host: "localhost",
   user: "root",
   password: "",
   database: "super_company_db",
 };
-
-// db();
-// async function db() {
-//   const data = await inquirer.prompt
-// }
 
 const db = mysql.createConnection(
   dbConnection,
@@ -46,7 +39,7 @@ async function startProgram() {
         "Add employee",
         "Update employee",
         "Update employee role",
-        "Exit"
+        "Exit",
       ],
     },
   ]);
@@ -76,17 +69,79 @@ async function startProgram() {
       updateEmployee();
       break;
     case "Update employee role":
-      updateRole();
+      updateEmployeeRole();
       break;
     case "Exit":
       process.exit();
   }
 }
 
-// Wrap up the exports in an object
-const funcMeUp = {
-startProgram
+let showDepartments = async () => {
+  const [rows, fields] = await (await db).execute("SELECT department_id AS ID, dept_name AS Department FROM department");
+  console.table(rows);
 };
 
-// Export it
-module.exports = funcMeUp;
+let showRoles = async () => {
+  const [rows, fields] = await (await db).execute("SELECT role_id AS ID, title AS Title, salary AS Salary, department_ID AS Department FROM roles;");
+  console.table(rows);
+};
+
+let showEmployees = async () => {
+  const [rows, fields] = await (await db).execute("SELECT employee_id AS ID, first_name AS FirstName, last_name AS LastName, role_id AS Role, manager_id AS ReportsTo FROM employees;");
+  console.table(rows);
+};
+
+let addDepartment = async () => {
+  const [rows, fields] = await (
+    await db
+  ).execute(`
+INSERT INTO department (dept_name)
+VALUES ("${deptName}")
+`);
+  console.table(rows);
+  console.log(`${deptName} has been added as a department.`);
+};
+
+let addRole = async () => {
+  const [rows, fields] = await (
+    await db
+  ).execute(`
+INSERT INTO roles (title, salary, department_id)
+VALUES ("${rolesTitle}, ${rolesSalary}, ${department_id}");
+`);
+  console.table(rows);
+  console.log(`${rolesTitle} has been added as a role.`);
+};
+
+let addEmployee = async () => {
+  const [rows, fields] = await (
+    await db
+  ).execute(`
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
+VALUES ("${first_name}, ${last_name}, ${role_id}, ${manager_id}");
+`);
+  console.table(rows);
+  console.log(`${first_name} ${last_name} has been added as an employee.`);
+};
+
+let updateEmployee = async () => {
+  const [rows, fields] = await (
+    await db
+  ).execute(`
+  select * from employees where employee_id = ${employeeID}
+`);
+  console.table(rows);
+  console.log(`Employee ${employeeID} has been selected for a role update.`);
+};
+
+let updateEmployeeRole = async () => {
+  const [rows, fields] = await (
+    await db
+  ).execute(`
+  UPDATE employees
+  SET role_id = ${roleID}
+  WHERE employee_id = ${employeeID};
+`);
+  console.table(rows);
+  console.log(`Employee ${employeeID} has had their role updated to role ID ${roleID}.`);
+};
