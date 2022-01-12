@@ -13,7 +13,7 @@ VALUES ("Head of Human Resources", 190000, 1),
        ("Network Monitor", 50000, 4);
 
 
-INSERT INTO employees (first_name, last_name, role_id, manager_id)
+INSERT INTO employees (first_name, last_name, role_id, manager_id,)
 VALUES ("Priya", "M", 1, NULL),
        ("Electric", "Boogaloo", 3, NULL),
        ("Rupert", "Grant", 3, 2),
