@@ -52,7 +52,6 @@ async function startProgram() {
         "Add role",
         "Add employee",
         "Update employee",
-        "Update employee role",
         "Exit",
       ],
     },

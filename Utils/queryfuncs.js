@@ -39,7 +39,6 @@ let addDepartment = async (startProgram) => {
       message: "What is the name of the department?",
     },
   ]);
-  console.log([deptName]);
   const deptNameArray = [deptName];
   await db.execute(`INSERT INTO department (dept_name) VALUES (?)`, [deptName]);
   console.log(`${deptName} has been added as a department.`);
@@ -80,13 +79,6 @@ VALUES (?, ?, ?);
 
 // Function for adding an employee
 let addEmployee = async (startProgram) => {
-  // const position = [
-  //   { role: "Head of Human Resources", role_id: 1 },
-  //   { role: "Accountant", role_id: 2 },
-  //   { role: "Spin Team", role_id: 3 },
-  //   { role: "Pen Tester", role_id: 4 },
-  //   { role: "Network Monitor", role_id: 5 },
-  // ];
 
   const [roles] = await (await db).execute("SELECT * FROM roles;");
 
@@ -115,7 +107,7 @@ let addEmployee = async (startProgram) => {
     {
       name: "managerID",
       type: "input",
-      message: "What is the department ID of the role?",
+      message: "What is the manager ID of the employee?",
     },
   ]);
 
@@ -142,6 +134,8 @@ let updateEmployee = async (startProgram) => {
     name: employee.first_name,
     value: employee.employee_id,
   }));
+  
+  console.log(employeeArray);
 
   const chosenEmp = await inquirer.prompt([
     {
@@ -152,16 +146,12 @@ let updateEmployee = async (startProgram) => {
     },
   ]);
 
-  console.log(chosenEmp);
-
   const [roles] = await (await db).execute("SELECT * FROM roles;");
 
   const positionsArray = roles.map((role) => ({
     name: role.title,
     value: role,
   }));
-
-  console.log(positionsArray);
 
   const { firstName, lastName, role, managerID } = await inquirer.prompt([
     {
@@ -187,38 +177,27 @@ let updateEmployee = async (startProgram) => {
     },
   ]);
 
-  console.log(
+  console.log([
     firstName,
     lastName,
     role.role_id,
     managerID,
-    chosenEmp.employeeID
-  );
+    chosenEmp.employeeID,
+  ]);
 
   await db.execute(
-    `UPDATE employees SET first_name = ?, last_name = ?, role_id = ?, manager_id = ? WHERE employee_id = ?;`[
-      (firstName, lastName, role.role_id, parseInt(managerID), chosenEmp.employeeID)
+    `UPDATE employees SET first_name = ?, last_name = ?, role_id = ?, manager_id = ? WHERE employee_id = ?;`,
+    [
+      firstName,
+      lastName,
+      role.role_id,
+      parseInt(managerID),
+      chosenEmp.employeeID,
     ]
   );
 
-  console.table(employees);
-  // console.log(`Employee ${employeeID} has been selected for a role update.`);
+  console.log(`Employee ${chosenEmp.employeeID} has been updated.`);
   setTimeout(startProgram, 1500);
-};
-
-let updateEmployeeRole = async (startProgram) => {
-  const [rows] = await (
-    await db
-  ).execute(`
-  UPDATE employees
-  SET role_id = ${roleID}
-  WHERE employee_id = ${employeeID};
-`);
-  console.table(rows);
-  console.log(
-    `Employee ${employeeID} has had their role updated to role ID ${roleID}.`
-  );
-  setTimeout(startProgram, 2000);
 };
 
 const queryFuncs = {
@@ -229,7 +208,6 @@ const queryFuncs = {
   addRole,
   addEmployee,
   updateEmployee,
-  updateEmployeeRole,
 };
 
 module.exports = queryFuncs;
